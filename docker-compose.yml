@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  backend-1:
+    build:
+      context: .
+    image: backend:latest
+    network_mode: "host"
+    environment:
+      PORT: 4000
+    restart: always
+    
+  backend-2:
+    build:
+      context: .
+    image: backend:latest
+    network_mode: "host"
+    environment:
+      PORT: 4001
+    restart: always
