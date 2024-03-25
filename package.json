@@ -9,7 +9,7 @@
     "build": "rimraf dist && tsc",
     "start": "node dist/server.js",
     "seed": "node dist/schema/seed.js",
-    "generate": "npx kysely-codegen --dialect postgres --out-file src/db/db.d.ts"
+    "generate": "npx kysely-codegen --dialect postgres"
   },
   "license": "MIT",
   "dependencies": {
