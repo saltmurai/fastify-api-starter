@@ -3,16 +3,16 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { checkConnection } from "./db/database";
 import cors from "@fastify/cors";
-import { routes, schemas } from "./modules/index";
+import { routes } from "./modules/index";
 
-const server = fastify({
+const app = fastify({
   logger: true,
   connectionTimeout: 10000,
 });
 
-server.register(cors);
+app.register(cors);
 
-server.addHook("onReady", async function () {
+app.addHook("onReady", async function () {
   try {
     await checkConnection();
     console.log("Application is ready");
@@ -22,17 +22,12 @@ server.addHook("onReady", async function () {
   }
 });
 
-server.addHook("onRequest", (request, _reply, done) => {
+app.addHook("onRequest", (request, _reply, done) => {
   const timestamp = new Date().toISOString();
   console.log(
     `[${timestamp}] Received ${request.method} request on ${request.url}`
   );
   done();
-});
-
-// add all schemas
-schemas.forEach((schema) => {
-  server.addSchema(schema);
 });
 
 const swaggerOptions = {
@@ -52,12 +47,12 @@ const swaggerUiOptions = {
   routePrefix: "/docs",
   exposeRoute: true,
 };
-server.register(fastifySwagger, swaggerOptions);
-server.register(fastifySwaggerUi, swaggerUiOptions);
+app.register(fastifySwagger, swaggerOptions);
+app.register(fastifySwaggerUi, swaggerUiOptions);
 
 // Register all routes
 routes.forEach((route) => {
-  server.register(route, {});
+  app.register(route, {});
 });
 
-export default server;
+export default app;
